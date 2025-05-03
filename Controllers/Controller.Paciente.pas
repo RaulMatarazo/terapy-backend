@@ -8,40 +8,47 @@ implementation
 
 uses
   Horse,
+  DataSet.Serialize,
   Provider.Connection,
-  FireDAC.Comp.Client,
-  DataSet.Serialize;
+  Data.SqlExpr, Data.Win.ADODB, Data.DB, Windows, ActiveX, Vcl.Dialogs;
 
 procedure Get(Req: THorseRequest; Res: THorseResponse);
 var
-  LConexao: TConexao;
-  LQuery: TFDQuery;
+  LConnection: TConnectionProvider;
+  LQuery: TADOQuery;
 begin
+  CoInitialize(nil); // Inicializa COM para esta thread
   try
-    LConexao := TConexao.Create;
-    LQuery := TFDQuery.Create(nil);
+    LConnection := TConnectionProvider.Create;
+    LQuery := TADOQuery.Create(nil);
+    try
+      with LQuery do
+      begin
+        Connection := LConnection.GetConnection;
+        SQL.Text := 'SELECT * FROM usuarios';
+        Open;
+      end;
 
-    LConexao.Conectar;
+      ShowMessage(LQuery.ToJSONArrayString());
 
-    with LQuery do
-    begin
-      Close;
-      SQL.Text := 'SELECT * FROM pacientes';
-      Open;
+      // Configurar o cabeçalho da resposta para JSON
+      Res.ContentType('application/json');
+
+      // Enviar a resposta como JSON
+      Res.Send(LQuery.ToJSONArrayString());
+
+    finally
+      LQuery.Free;
+      LConnection.Free;
     end;
-
-    Res.Send(LQuery.ToJSONArray()).Status(200);
   finally
-    LQuery.Free;
-    LConexao.Desconectar;
-    LConexao.Free;
+    CoUninitialize; // Libera COM da thread
   end;
-
 end;
 
 procedure Registry;
 begin
-  THorse.Get('/api/paciente', Get);
+  THorse.Get('/api/pacientes', Get);
 end;
 
 end.

@@ -11,12 +11,12 @@ uses
 
 procedure Get(Req: THorseRequest; Res: THorseResponse);
 begin
-  Res.Send('Retornando psicologos');
+  Res.Send('Retornando psicologos').Status(200);
 end;
 
 procedure Registry;
 begin
-  THorse.Get('/api/psicologo', Get);
+  THorse.Get('/api/psicologos', Get);
 end;
 
 end.

@@ -3,75 +3,43 @@ unit Provider.Connection;
 interface
 
 uses
-  FireDAC.Comp.Client;
+  System.SysUtils, Data.Win.ADODB;
 
 type
-  TConexao = class
-    private
-      FConnection: TFDConnection;
-      procedure ConfigurarParametros;
-    public
-      constructor Create;
-      destructor Destroy; override;
+  TConnectionProvider = class
+  private
+    FConnection: TADOConnection;
+  public
+    constructor Create;
+    destructor Destroy; override;
 
-      function ObterConexao: TFDConnection;
-      procedure Conectar;
-      procedure Desconectar;
+    function GetConnection: TADOConnection;
   end;
 
 implementation
 
-uses
-  System.SysUtils;
+{ TConnectionProvider }
 
-{ TConexao }
-
-constructor TConexao.Create;
+constructor TConnectionProvider.Create;
 begin
-  FConnection := TFDConnection.Create(nil);
-   ConfigurarParametros;
-end;
-
-destructor TConexao.Destroy;
-begin
-  if Assigned(FConnection) then
-  begin
-    if FConnection.Connected then
-      FConnection.Connected := False;
-    FreeAndNil(FConnection);
-  end;
-  inherited;
-end;
-
-procedure TConexao.ConfigurarParametros;
-begin
+  FConnection := TADOConnection.Create(nil);
   FConnection.LoginPrompt := False;
-  FConnection.DriverName := 'MySQL'; // Troque conforme o banco
-  with FConnection.Params do
-  begin
-    Values['Database'] := 'nomedobanco';
-    Values['User_Name'] := 'root';
-    Values['Password'] := 'senha';
-    Values['Server'] := 'localhost';
-    Values['Port'] := '3306';
-  end;
+  FConnection.ConnectionString := 'Provider=MSDASQL.1;Persist Security Info=False;User ID=postgres;Data Source=PostgreSQL35W';
+  FConnection.Connected := True;
 end;
 
-procedure TConexao.Conectar;
-begin
-  if not FConnection.Connected then
-    FConnection.Connected := True;
-end;
-
-procedure TConexao.Desconectar;
+destructor TConnectionProvider.Destroy;
 begin
   if FConnection.Connected then
     FConnection.Connected := False;
+  FConnection.Free;
+  inherited;
 end;
 
-function TConexao.ObterConexao: TFDConnection;
+function TConnectionProvider.GetConnection: TADOConnection;
 begin
   Result := FConnection;
 end;
 
 end.
+
