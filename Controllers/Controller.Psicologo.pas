@@ -7,7 +7,8 @@ procedure Registry;
 implementation
 
 uses
-  Horse;
+  Horse,
+  Provider.Authorization;
 
 procedure Get(Req: THorseRequest; Res: THorseResponse);
 begin
@@ -16,7 +17,7 @@ end;
 
 procedure Registry;
 begin
-  THorse.Get('/api/psicologos', Get);
+  THorse.AddCallback(Authorization()).Get('/api/psicologos', Get);
 end;
 
 end.

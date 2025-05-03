@@ -10,7 +10,12 @@ uses
   Horse,
   DataSet.Serialize,
   Provider.Connection,
-  Data.SqlExpr, Data.Win.ADODB, Data.DB, Windows, ActiveX, Vcl.Dialogs;
+  Data.SqlExpr,
+  Data.Win.ADODB,
+  Data.DB,
+  Windows,
+  ActiveX,
+  Provider.Authorization;
 
 procedure Get(Req: THorseRequest; Res: THorseResponse);
 var
@@ -25,14 +30,9 @@ begin
       with LQuery do
       begin
         Connection := LConnection.GetConnection;
-        SQL.Text := 'SELECT * FROM usuarios';
+        SQL.Text := 'SELECT users_id, username FROM users';
         Open;
       end;
-
-      ShowMessage(LQuery.ToJSONArrayString());
-
-      // Configurar o cabeçalho da resposta para JSON
-      Res.ContentType('application/json');
 
       // Enviar a resposta como JSON
       Res.Send(LQuery.ToJSONArrayString());
@@ -48,7 +48,7 @@ end;
 
 procedure Registry;
 begin
-  THorse.Get('/api/pacientes', Get);
+  THorse.AddCallback(Authorization()).Get('/api/pacientes', Get);
 end;
 
 end.
