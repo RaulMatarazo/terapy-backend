@@ -102,6 +102,7 @@
         <DCCReference Include="Providers\Provider.Connection.pas"/>
         <DCCReference Include="Providers\Provider.Authorization.pas"/>
         <DCCReference Include="Controllers\Controller.Authorization.pas"/>
+        <DCCReference Include="Controllers\Controller.Usuario.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

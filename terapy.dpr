@@ -14,13 +14,15 @@ uses
   Controller.Paciente in 'Controllers\Controller.Paciente.pas',
   Provider.Connection in 'Providers\Provider.Connection.pas',
   Provider.Authorization in 'Providers\Provider.Authorization.pas',
-  Controller.Authorization in 'Controllers\Controller.Authorization.pas';
+  Controller.Authorization in 'Controllers\Controller.Authorization.pas',
+  Controller.Usuario in 'Controllers\Controller.Usuario.pas';
 
 begin
 
   Controller.Psicologo.Registry;
   Controller.Paciente.Registry;
   Controller.Authorization.Registry;
+  Controller.Usuario.Registry;
 
   THorse.Listen(9000);
 end.

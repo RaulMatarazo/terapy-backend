@@ -34,7 +34,7 @@ begin
     With LQuery do
     begin
       Connection := AConnection.GetConnection;
-      SQL.Text := 'SELECT * FROM users WHERE username = ' + QuotedStr(AUsername) + ' AND password = ' + QuotedStr(APassword);
+      SQL.Text := 'SELECT * FROM usuarios WHERE email = ' + QuotedStr(AUsername) + ' AND senha = ' + QuotedStr(APassword);
       Open;
     end;
     if (LQuery.ExecSQL = 1) then

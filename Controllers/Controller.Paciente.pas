@@ -30,7 +30,9 @@ begin
       with LQuery do
       begin
         Connection := LConnection.GetConnection;
-        SQL.Text := 'SELECT users_id, username FROM users';
+        SQL.Text := 'SELECT u.id_usuario primeiro_nome, sobrenome, data_nascimento, ' +
+        ' email, telefone FROM PACIENTES p ' +
+        ' LEFT JOIN usuarios u ON u.id_usuario = p.id_usuario ';
         Open;
       end;
 
