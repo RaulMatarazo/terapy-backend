@@ -43,9 +43,32 @@ begin
   end;
 end;
 
+procedure Post(Req: THorseRequest; Res: THorseResponse);
+var
+  LConnection: TConnectionProvider;
+  LQuery: TADOQuery;
+  LBody: TJSONObject;
+begin
+  CoInitialize(nil);
+  try
+    LConnection := TConnectionProvider.Create;
+    LQuery := TADOQuery.Create(nil);
+    LBody := TJSONObject.ParseJSONValue(Req.Body) AS TJSONObject;
+    try
+
+    finally
+      LQuery.Free;
+      LConnection.Free;
+    end;
+  finally
+    CoUninitialize;
+  end;
+end;
+
 procedure Registry;
 begin
   THorse.AddCallback(Authorization()).Get('/api/psicologos', Get);
+  THorse.AddCallback(Authorization()).Post('/api/psicologos', Post);
 end;
 
 end.

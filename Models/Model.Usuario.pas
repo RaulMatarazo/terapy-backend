@@ -15,7 +15,7 @@ type
       FTelefone: string;
       FSenha: string;
     public
-      function ValidarUsuario(AConnection: TConnectionProvider; AUsername, APassword: string): Boolean;
+      function ValidarUsuario(AConnection: TConnectionProvider; AUsername, APassword: string; var ARole: string): Boolean;
   end;
 
 implementation
@@ -25,7 +25,7 @@ uses
   Data.SqlExpr,
   System.SysUtils;
 
-function TUsuario.ValidarUsuario(AConnection: TConnectionProvider; AUsername, APassword: string): Boolean;
+function TUsuario.ValidarUsuario(AConnection: TConnectionProvider; AUsername, APassword: string; var ARole: string): Boolean;
 var
   LQuery: TADOQuery;
 begin
@@ -39,6 +39,7 @@ begin
     end;
     if (LQuery.ExecSQL = 1) then
     begin
+      ARole := LQuery.FieldByName('papel').AsString;
       Result := True;
     end
     else

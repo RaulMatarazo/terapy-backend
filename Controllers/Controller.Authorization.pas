@@ -25,6 +25,7 @@ var
   LBody: TJSONObject;
   LConnection: TConnectionProvider;
   LUsuario: TUsuario;
+  LRole: string;
 begin
 
   try
@@ -34,15 +35,15 @@ begin
       LUsuario := TUsuario.Create;
       LBody := TJSONObject.ParseJSONValue(Req.Body) AS TJSONObject;
 
-      if LUsuario.ValidarUsuario(LConnection, LBody.GetValue('username').Value, LBody.GetValue('password').Value) then
+      if LUsuario.ValidarUsuario(LConnection, LBody.GetValue('username').Value, LBody.GetValue('password').Value, LRole) then
       begin
         LToken := getToken(LBody.GetValue('username').Value);
         WriteLn(LToken);
-        Res.Send(TJSONObject.Create.AddPair('token', LToken).ToJSON).Status(200);
+        Res.Send(TJSONObject.Create.AddPair('token', LToken).AddPair('papel', LRole).ToJSON).Status(200);
       end
       else
       begin
-        Res.Send('Usuário Inválido').Status(401);
+        Res.Send('Usuário Inválido').Status(203);
       end;
     finally
       LConnection.Free;

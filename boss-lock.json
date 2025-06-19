@@ -18,6 +18,14 @@
 			"failed": false,
 			"changed": false
 		},
+		"github.com/hashload/horse-cors": {
+			"name": "horse-cors",
+			"version": "1.0.6",
+			"hash": "544456143eca0709bd9793b1fa04cb69",
+			"artifacts": {},
+			"failed": false,
+			"changed": false
+		},
 		"github.com/hashload/horse-jwt": {
 			"name": "horse-jwt",
 			"version": "2.0.17",

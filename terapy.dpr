@@ -7,6 +7,7 @@ program terapy;
 uses
   System.SysUtils,
   Horse,
+  Horse.CORS,
   Model.Psicologo in 'Models\Model.Psicologo.pas',
   Model.Paciente in 'Models\Model.Paciente.pas',
   Model.Usuario in 'Models\Model.Usuario.pas',
@@ -18,6 +19,17 @@ uses
   Controller.Usuario in 'Controllers\Controller.Usuario.pas';
 
 begin
+
+  THorse
+    .Use(CORS);
+
+  // Local ou Servidor
+  HorseCORS
+  .AllowedOrigin('*')
+  .AllowedCredentials(True)
+  .AllowedMethods('*')
+  .AllowedHeaders('*')
+  .ExposedHeaders('*');
 
   Controller.Psicologo.Registry;
   Controller.Paciente.Registry;
