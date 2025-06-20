@@ -31,11 +31,11 @@ var
 begin
   try
     LSQLUsuario := ' INSERT INTO USUARIOS (papel, primeiro_nome, sobrenome, ' +
-            ' data_nascimento, email, telefone, senha) ' +
-            ' VALUES (''psicologo'', ' + QuotedStr(APrimeiroNome) + ', ' +
-            QuotedStr(ASobrenome) + ', ' + QuotedStr(ADataNascimento) + ', ' +
-            QuotedStr(AEmail) + ', ' + QuotedStr(ATelefone) + ', ' +
-            QuotedStr(ASenha) + ')';
+      ' data_nascimento, email, telefone, senha) ' +
+      ' VALUES (''psicologo'', ' + QuotedStr(APrimeiroNome) + ', ' +
+      QuotedStr(ASobrenome) + ', ' + QuotedStr(ADataNascimento) + ', ' +
+      QuotedStr(AEmail) + ', ' + QuotedStr(ATelefone) + ', ' +
+      QuotedStr(ASenha) + ')';
 
     AConnection.Execute(LSQLUsuario);
 
