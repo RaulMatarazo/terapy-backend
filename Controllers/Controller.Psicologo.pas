@@ -12,7 +12,8 @@ uses
   Provider.Connection,
   Data.Win.ADODB,
   Dataset.Serialize,
-  ActiveX;
+  ActiveX, JOSE.Types.JSON,
+  Model.Psicologo;
 
 procedure Get(Req: THorseRequest; Res: THorseResponse);
 var
@@ -46,20 +47,22 @@ end;
 procedure Post(Req: THorseRequest; Res: THorseResponse);
 var
   LConnection: TConnectionProvider;
-  LQuery: TADOQuery;
   LBody: TJSONObject;
+  LPsicologo: TPsicologo;
 begin
   CoInitialize(nil);
   try
-    LConnection := TConnectionProvider.Create;
-    LQuery := TADOQuery.Create(nil);
     LBody := TJSONObject.ParseJSONValue(Req.Body) AS TJSONObject;
-    try
-
-    finally
-      LQuery.Free;
-      LConnection.Free;
-    end;
+    LConnection := TConnectionProvider.Create;
+    LPsicologo := TPsicologo.Create;
+    if (LPsicologo.CriarPsicologo(LBody.GetValue('primeiroNome').Value,
+    LBody.GetValue('sobrenome').Value, LBody.GetValue('dataNascimento').Value,
+    LBody.GetValue('email').Value, LBody.GetValue('telefone').Value,
+    LBody.GetValue('senha').Value, LBody.GetValue('crp').Value,
+    LConnection.GetConnection())) then
+      Res.Status(201)
+    else
+      Res.Send('Erro ao cadastrar o psicólogo').Status(203);
   finally
     CoUninitialize;
   end;
@@ -68,7 +71,7 @@ end;
 procedure Registry;
 begin
   THorse.AddCallback(Authorization()).Get('/api/psicologos', Get);
-  THorse.AddCallback(Authorization()).Post('/api/psicologos', Post);
+  THorse.Post('/api/psicologos', Post);
 end;
 
 end.
