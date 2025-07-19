@@ -16,7 +16,8 @@ uses
   Provider.Connection in 'Providers\Provider.Connection.pas',
   Provider.Authorization in 'Providers\Provider.Authorization.pas',
   Controller.Authorization in 'Controllers\Controller.Authorization.pas',
-  Controller.Usuario in 'Controllers\Controller.Usuario.pas';
+  Controller.Usuario in 'Controllers\Controller.Usuario.pas',
+  Controller.Notas in 'Controllers\Controller.Notas.pas';
 
 begin
 
@@ -35,6 +36,8 @@ begin
   Controller.Paciente.Registry;
   Controller.Authorization.Registry;
   Controller.Usuario.Registry;
+
+  Controller.Notas.Registry;
 
   THorse.Listen(9000);
 end.
