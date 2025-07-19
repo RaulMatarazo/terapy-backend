@@ -104,6 +104,8 @@
         <DCCReference Include="Controllers\Controller.Authorization.pas"/>
         <DCCReference Include="Controllers\Controller.Usuario.pas"/>
         <DCCReference Include="Controllers\Controller.Notas.pas"/>
+        <DCCReference Include="Models\Model.Notas.pas"/>
+        <DCCReference Include="Lib\GetTimestamp.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

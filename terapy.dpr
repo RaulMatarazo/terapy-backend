@@ -17,7 +17,9 @@ uses
   Provider.Authorization in 'Providers\Provider.Authorization.pas',
   Controller.Authorization in 'Controllers\Controller.Authorization.pas',
   Controller.Usuario in 'Controllers\Controller.Usuario.pas',
-  Controller.Notas in 'Controllers\Controller.Notas.pas';
+  Controller.Notas in 'Controllers\Controller.Notas.pas',
+  Model.Notas in 'Models\Model.Notas.pas',
+  GetTimestamp in 'Lib\GetTimestamp.pas';
 
 begin
 
