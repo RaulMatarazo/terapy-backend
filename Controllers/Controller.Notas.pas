@@ -57,8 +57,15 @@ begin
   try
     LConnection := TConnectionProvider.Create;
 
+    if not Req.Query.Dictionary.ContainsKey('idpsicologo') then
+    begin
+      Res.Send('Envie o id do psicologo').Status(400);
+      Exit;
+    end;
+
     Res.Send(LNota.VisualizarAnotacoes(Req.Query.Items['data'],
     Req.Query.Items['palavra'], Req.Query.Items['ordem'],
+    StrToInt(Req.Query.Items['idpsicologo']),
     LConnection.GetConnection).ToJSONArrayString()).Status(200);
   finally
     CoUninitialize;

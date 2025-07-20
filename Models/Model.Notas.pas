@@ -10,8 +10,8 @@ type TNota = class
   public
   function CriarAnotacao(AIdPsicologo, AIdPaciente: Integer; AAnotacao,
   ADataCriacao: string; AConnection: TADOConnection): Boolean;
-  function VisualizarAnotacoes(AData, APalavra, AOrdem: string;
-  AConnection: TADOConnection): TADOQuery;
+  function VisualizarAnotacoes(AData, APalavra,
+  AOrdem: string; AIdPsicologo: Integer; AConnection: TADOConnection): TADOQuery;
   function AtualizarAnotacao(AIdAnotacao: Integer;
   AAnotacao: string; AConnection: TADOConnection): Boolean;
   function ExcluirAnotacao(AIdAnotacao: Integer;
@@ -72,7 +72,7 @@ begin
 end;
 
 function TNota.VisualizarAnotacoes(AData, APalavra,
-  AOrdem: string; AConnection: TADOConnection): TADOQuery;
+  AOrdem: string; AIdPsicologo: Integer; AConnection: TADOConnection): TADOQuery;
 var
   LQuery: TADOQuery;
   LSQL: string;
@@ -81,7 +81,7 @@ begin
   LQuery := TADOQuery.Create(nil);
   LQuery.Connection := AConnection;
 
-  LSQL := 'SELECT * FROM psicologo_notas where 1 = 1 ';
+  LSQL := Format('SELECT * FROM psicologo_notas where id_psicologo = %d ', [AIdPsicologo]);
 
   if (AData <> '') then
   begin

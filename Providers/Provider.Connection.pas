@@ -22,6 +22,8 @@ implementation
 
 constructor TConnectionProvider.Create;
 begin
+  // o driver utilizado foi o odbc: gratuito e fácil configuração
+  // o odbc é compatível com o FireDac e o ADO (como é community edition só tem o ADO)
   FConnection := TADOConnection.Create(nil);
   FConnection.LoginPrompt := False;
   FConnection.ConnectionString := 'Provider=MSDASQL.1;Persist Security Info=False;User ID=postgres;Data Source=PostgreSQL35W';

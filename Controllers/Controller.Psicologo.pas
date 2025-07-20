@@ -28,7 +28,7 @@ begin
       with LQuery do
       begin
         Connection := LConnection.GetConnection;
-        SQL.Text := 'SELECT u.id_usuario, primeiro_nome, sobrenome, data_nascimento, ' +
+        SQL.Text := 'SELECT u.id_usuario, id_psicologo, primeiro_nome, sobrenome, data_nascimento, ' +
         ' email, telefone FROM psicologos p ' +
         'LEFT JOIN usuarios u on u.id_usuario = p.id_usuario';
         Open;
@@ -71,7 +71,7 @@ end;
 procedure Registry;
 begin
   THorse.AddCallback(Authorization()).Get('/api/psicologos', Get);
-  THorse.Post('/api/psicologos', Post);
+  THorse.Post('/api/psicologos', Post); // criação da conta
 end;
 
 end.
