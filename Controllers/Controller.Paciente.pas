@@ -21,19 +21,42 @@ procedure Get(Req: THorseRequest; Res: THorseResponse);
 var
   LConnection: TConnectionProvider;
   LQuery: TADOQuery;
+  SSQL: string;
 begin
   CoInitialize(nil); // Inicializa COM para esta thread
   try
     LConnection := TConnectionProvider.Create;
     LQuery := TADOQuery.Create(nil);
+    SSQL := Format('SELECT u.id_usuario, id_paciente, primeiro_nome, sobrenome, data_nascimento, ' +
+        ' email, telefone FROM PACIENTES p ' +
+        ' LEFT JOIN usuarios u ON u.id_usuario = p.id_usuario ' +
+        ' WHERE id_psicologo = %d ', [StrToInt(Req.Query.Items['idpsicologo'])]);
+
+    if Req.Query.ContainsKey('primeiroNome') then
+    begin
+      if (Trim(Req.Query.Items['primeiroNome'])) <> '' then
+      begin
+        SSQL := SSQL + ' AND u.primeiro_nome like ' +
+        QuotedStr('%'+ Req.Query.Items['primeiroNome'] + '%');
+      end;
+
+    end;
+
+    if Req.Query.ContainsKey('sobrenome') then
+    begin
+      if (Trim(Req.Query.Items['sobrenome'])) <> '' then
+      begin
+        SSQL := SSQL + ' AND u.sobrenome like ' +
+        QuotedStr('%'+ Req.Query.Items['sobrenome'] + '%');
+      end;
+
+    end;
+
     try
       with LQuery do
       begin
         Connection := LConnection.GetConnection;
-        SQL.Text := Format('SELECT u.id_usuario, id_paciente, primeiro_nome, sobrenome, data_nascimento, ' +
-        ' email, telefone FROM PACIENTES p ' +
-        ' LEFT JOIN usuarios u ON u.id_usuario = p.id_usuario ' +
-        ' WHERE id_psicologo = %d ', [StrToInt(Req.Query.Items['idpsicologo'])]);
+        SQL.Text := SSQL;
         Open;
       end;
 

@@ -106,6 +106,10 @@
         <DCCReference Include="Controllers\Controller.Notas.pas"/>
         <DCCReference Include="Models\Model.Notas.pas"/>
         <DCCReference Include="Lib\GetTimestamp.pas"/>
+        <DCCReference Include="Controllers\Controller.Emocao.pas"/>
+        <DCCReference Include="Models\Model.Emocao.pas"/>
+        <DCCReference Include="Controllers\Controller.Dashboard.pas"/>
+        <DCCReference Include="Models\Model.Dashboard.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

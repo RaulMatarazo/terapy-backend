@@ -19,7 +19,11 @@ uses
   Controller.Usuario in 'Controllers\Controller.Usuario.pas',
   Controller.Notas in 'Controllers\Controller.Notas.pas',
   Model.Notas in 'Models\Model.Notas.pas',
-  GetTimestamp in 'Lib\GetTimestamp.pas';
+  GetTimestamp in 'Lib\GetTimestamp.pas',
+  Controller.Emocao in 'Controllers\Controller.Emocao.pas',
+  Model.Emocao in 'Models\Model.Emocao.pas',
+  Controller.Dashboard in 'Controllers\Controller.Dashboard.pas',
+  Model.Dashboard in 'Models\Model.Dashboard.pas';
 
 begin
 
@@ -38,8 +42,8 @@ begin
   Controller.Paciente.Registry;
   Controller.Authorization.Registry;
   Controller.Usuario.Registry;
-
   Controller.Notas.Registry;
+  Controller.Emocao.Registry;
 
   THorse.Listen(9000);
 end.

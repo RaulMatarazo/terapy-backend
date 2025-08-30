@@ -13,7 +13,7 @@ uses
   Data.Win.ADODB,
   Dataset.Serialize,
   ActiveX, JOSE.Types.JSON,
-  Model.Psicologo;
+  Model.Psicologo, System.SysUtils;
 
 procedure Get(Req: THorseRequest; Res: THorseResponse);
 var
@@ -68,9 +68,31 @@ begin
   end;
 end;
 
+procedure Delete(Req: THorseRequest; Res: THorseResponse);
+var
+  LConnection: TConnectionProvider;
+  LPsicologo: TPsicologo;
+  LBody: TJSONObject;
+begin
+  CoInitialize(nil);
+  try
+    LConnection := TConnectionProvider.Create;
+    LBody := TJSONObject.ParseJSONValue(Req.Body) As TJSONObject;
+    LPsicologo := TPsicologo.Create;
+    if (LPsicologo.ExcluirPsicologo(StrToInt(LBody.GetValue('idusuario').Value),
+    LConnection.GetConnection())) then
+      Res.Send('Psicólogo excluído com sucesso!').Status(200)
+    else
+      Res.Send('Erro ao excluir o psicólogo').Status(400);
+  finally
+    CoUninitialize;
+  end;
+end;
+
 procedure Registry;
 begin
   THorse.AddCallback(Authorization()).Get('/api/psicologos', Get);
+  THorse.AddCallback(Authorization()).Delete('/api/psicologos', Delete);
   THorse.Post('/api/psicologos', Post); // criação da conta
 end;
 

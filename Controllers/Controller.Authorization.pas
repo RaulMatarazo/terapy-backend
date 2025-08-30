@@ -25,7 +25,7 @@ var
   LBody: TJSONObject;
   LConnection: TConnectionProvider;
   LUsuario: TUsuario;
-  LRole: string;
+  LRole, LIDPsicologo, LIDPaciente: string;
 begin
 
   try
@@ -35,11 +35,14 @@ begin
       LUsuario := TUsuario.Create;
       LBody := TJSONObject.ParseJSONValue(Req.Body) AS TJSONObject;
 
-      if LUsuario.ValidarUsuario(LConnection, LBody.GetValue('username').Value, LBody.GetValue('password').Value, LRole) then
+      if LUsuario.ValidarUsuario(LConnection, LBody.GetValue('username').Value, LBody.GetValue('password').Value, LRole, LIDPsicologo, LIDPaciente) then
       begin
         LToken := getToken(LBody.GetValue('username').Value);
-        WriteLn(LToken);
-        Res.Send(TJSONObject.Create.AddPair('token', LToken).AddPair('papel', LRole).ToJSON).Status(200);
+        //WriteLn(LToken);
+        if LRole = 'psicologo' then
+          Res.Send(TJSONObject.Create.AddPair('token', LToken).AddPair('papel', LRole).AddPair('idpsicologo', LIDPsicologo).ToJSON).Status(200)
+        else if LRole = 'paciente' then
+          Res.Send(TJSONObject.Create.AddPair('token', LToken).AddPair('papel', LRole).AddPair('idpaciente', LIDPsicologo).ToJSON).Status(200);
       end
       else
       begin
