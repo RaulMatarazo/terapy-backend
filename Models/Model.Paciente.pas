@@ -242,6 +242,10 @@ begin
     [LQuery.FieldByName('id_paciente').AsInteger]);
     AConnection.Execute(LSQL);
 
+    LSQL := Format('DELETE FROM paciente_emocao where id_paciente = %d',
+    [LQuery.FieldByName('id_paciente').AsInteger]);
+    AConnection.Execute(LSQL);
+
     LSQL := Format('DELETE FROM pacientes where id_usuario = %d',
     [AIdUsuario]);
     AConnection.Execute(LSQL);
