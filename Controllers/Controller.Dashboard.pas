@@ -45,7 +45,7 @@ begin
     LTotalPacientes := LDashboard.TotalPacientes(Req.Query.Items['idpsicologo'].ToInteger(),
     LConnection.GetConnection);
 
-    LJSON := TJSONObject.Create.AddPair('anotacoes', LTotalAnotacoes.ToString)
+    LJSON := TJSONObject.Create.AddPair('anotacoes', LTotalAnotacoes)
     .AddPair('pacientes', LTotalPacientes);
     try
       Res.ContentType('application/json')
