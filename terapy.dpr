@@ -44,6 +44,7 @@ begin
   Controller.Usuario.Registry;
   Controller.Notas.Registry;
   Controller.Emocao.Registry;
+  Controller.Dashboard.Registry;
 
   THorse.Listen(9000);
 end.

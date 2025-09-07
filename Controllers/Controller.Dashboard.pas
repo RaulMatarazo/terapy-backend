@@ -21,52 +21,47 @@ uses
   System.SysUtils,
   GetTimestamp;
 
-procedure GetEmocoes(Req: THorseRequest; Res: THorseResponse);
+procedure Get(Req: THorseRequest; Res: THorseResponse);
 var
   LConnection: TConnectionProvider;
   LDashboard: TDashboard;
+  LTotalAnotacoes, LTotalPacientes: Integer;
+  LJSON: TJSONObject;
 begin
   CoInitialize(nil);
   try
     LConnection := TConnectionProvider.Create;
     LDashboard := TDashboard.Create;
 
-    if not Req.Query.Dictionary.ContainsKey('idpaciente') then
-    begin
-      Res.Send('Envie o id do paciente').Status(400);
-      Exit;
-    end;
-
     if not Req.Query.Dictionary.ContainsKey('idpsicologo') then
     begin
-      Res.Send('Envie o id do psicólogo').Status(400);
+      Res.Send('[ERRO] Envie o id do psicólogo').Status(400);
       Exit;
     end;
 
-    Res.Send(LDashboard.DashboardEmocoes(StrToInt(Req.Query.Items['idpsicologo']),
-    StrToInt(Req.Query.Items['idpaciente']),LConnection.GetConnection).
-    ToJSONArrayString()).Status(200);
+    LTotalAnotacoes := LDashboard.TotalAnotacoes(Req.Query.Items['idpsicologo'].ToInteger(),
+    LConnection.GetConnection);
+
+    LTotalPacientes := LDashboard.TotalPacientes(Req.Query.Items['idpsicologo'].ToInteger(),
+    LConnection.GetConnection);
+
+    LJSON := TJSONObject.Create.AddPair('anotacoes', LTotalAnotacoes.ToString)
+    .AddPair('pacientes', LTotalPacientes);
+    try
+      Res.ContentType('application/json')
+         .Send(LJSON.ToJSON)
+         .Status(200);
+    finally
+      LJSON.Free;
+    end;
   finally
     CoUninitialize;
   end;
 end;
 
-procedure GetRegistros(Req: THorseRequest; Res: THorseResponse);
-begin
-
-end;
-
-procedure GetPacientes(Req: THorseRequest; Res: THorseResponse);
-begin
-
-end;
-
-
 procedure Registry;
 begin
-  THorse.AddCallback(Authorization()).Get('/api/dashboard/emocoes', GetEmocoes);
-  THorse.AddCallback(Authorization()).Get('/api/dashboard/registros', GetRegistros);
-  THorse.AddCallback(Authorization()).Get('/api/dashboard/pacientes', GetPacientes);
+  THorse.AddCallback(Authorization()).Get('/api/dashboard', Get);
 end;
 
 end.
