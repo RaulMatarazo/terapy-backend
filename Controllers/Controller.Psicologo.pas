@@ -19,18 +19,31 @@ procedure Get(Req: THorseRequest; Res: THorseResponse);
 var
   LConnection: TConnectionProvider;
   LQuery: TADOQuery;
+  LIdPsicologo: string;
+  LSQL: string;
 begin
   CoInitialize(nil);
   try
     LConnection := TConnectionProvider.Create;
     LQuery := TADOQuery.Create(nil);
+
+    if Req.Query.ContainsKey('idpsicologo') then
+      LIdPsicologo := Req.Query.Items['idpsicologo']
+    else
+      LIdPsicologo := EmptyStr;
+
+    LSQL := 'SELECT u.id_usuario, id_psicologo, primeiro_nome, sobrenome, data_nascimento, ' +
+        ' email, telefone FROM psicologos p LEFT JOIN usuarios u on u.id_usuario = p.id_usuario';
+    if LIdPsicologo <> '' then
+      LSQL := LSQL + ' where id_psicologo = ' + QuotedStr(LIdPsicologo);
+
+
+
     try
       with LQuery do
       begin
         Connection := LConnection.GetConnection;
-        SQL.Text := 'SELECT u.id_usuario, id_psicologo, primeiro_nome, sobrenome, data_nascimento, ' +
-        ' email, telefone FROM psicologos p ' +
-        'LEFT JOIN usuarios u on u.id_usuario = p.id_usuario';
+        SQL.Text := LSQL;
         Open;
       end;
 

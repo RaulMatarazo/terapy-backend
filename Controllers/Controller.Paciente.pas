@@ -142,7 +142,7 @@ begin
     try
       if not Req.Query.ContainsKey('idUsuario') then
       begin
-        Res.Send('Envie o id do paciente').Status(400);
+        Res.Send('Envie o id do usuário').Status(400);
         Exit;
       end;
 
@@ -172,7 +172,7 @@ begin
          if LPaciente.ValidarEmailID(LBody.GetValue('email').Value,
          StrToInt(Req.Query.Items['idUsuario']), LConnection.GetConnection) then
          begin
-           Res.Send('[ERRO] Email já cadastrado').Status(207);
+           Res.Send('Email já cadastrado').Status(207);
            Exit;
          end;
 
@@ -186,7 +186,7 @@ begin
         if LPaciente.ValidarTelefoneID(LBody.GetValue('telefone').Value,
         StrToInt(Req.Query.Items['idUsuario']), LConnection.GetConnection) then
         begin
-          Res.Send('[ERRO] Telefone já cadastrado').Status(207);
+          Res.Send('Telefone já cadastrado').Status(207);
           Exit;
         end;
 
