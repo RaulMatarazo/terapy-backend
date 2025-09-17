@@ -38,8 +38,9 @@ begin
     LData := GetTimestampStr();
 
     if (LEmocao.CriarEmocao(StrToInt(LBody.GetValue('idpaciente').Value),
-    StrToInt(LBody.GetValue('idemocao').Value), LData,
-    LConnection.GetConnection)) then
+    StrToInt(LBody.GetValue('idemocao').Value), LData, StrToInt(LBody.GetValue('qualidade').Value),
+    StrToInt(LBody.GetValue('idintensidade').Value), LBody.GetValue('descricao').Value,
+    LBody.GetValue('atividade').Value, LConnection.GetConnection)) then
       Res.Send('Emoção cadastrada com sucesso!').Status(201)
     else
       Res.Send('Erro ao cadastrar a emoção').Status(400);

@@ -9,6 +9,7 @@ type TEmocao = class
   private
   public
   function CriarEmocao(AIdPaciente, AIdEmocao: Integer; AData: string;
+AQualidade: Integer; AIdIntensidade: Integer; ADescricao, AAtividade: string;
   AConnection: TADOConnection): Boolean;
   function AtualizarEmocao(AIdPacienteEmocao: Integer;
   AIdEmocao: Integer; AData: string; AConnection: TADOConnection): Boolean;
@@ -26,13 +27,14 @@ uses
 { TEmocao }
 
 function TEmocao.CriarEmocao(AIdPaciente, AIdEmocao: Integer; AData: string;
+AQualidade: Integer; AIdIntensidade: Integer; ADescricao, AAtividade: string;
   AConnection: TADOConnection): Boolean;
 var
   LSQL: string;
 begin
   try
-    LSQL := Format('INSERT INTO paciente_emocao (id_paciente, id_emocao, hora) ' +
-     ' VALUES (%d, %d, %s)', [AIdPaciente, AIdEmocao, Quotedstr(AData)]);
+    LSQL := Format('INSERT INTO paciente_emocao (id_paciente, id_emocao, qualidade, id_intensidade, descricao, atividade,  hora) ' +
+     ' VALUES (%d, %d, %d, %d, %s, %s, %s)', [AIdPaciente, AIdEmocao, AQualidade, AIdIntensidade, QuotedStr(ADescricao), QuotedStr(AAtividade), Quotedstr(AData)]);
     AConnection.Execute(LSQL);
     Result := True;
   except
