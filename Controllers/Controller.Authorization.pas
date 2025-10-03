@@ -42,7 +42,7 @@ begin
         if LRole = 'psicologo' then
           Res.Send(TJSONObject.Create.AddPair('token', LToken).AddPair('papel', LRole).AddPair('idpsicologo', LIDPsicologo).ToJSON).Status(200)
         else if LRole = 'paciente' then
-          Res.Send(TJSONObject.Create.AddPair('token', LToken).AddPair('papel', LRole).AddPair('idpaciente', LIDPsicologo).ToJSON).Status(200)
+          Res.Send(TJSONObject.Create.AddPair('token', LToken).AddPair('papel', LRole).AddPair('idpaciente', LIDPaciente).ToJSON).Status(200)
         else if LRole = 'admin' then
           Res.Send('Entre como paciente ou psicólogo, função de admin indisponível no momento').Status(240);
       end
