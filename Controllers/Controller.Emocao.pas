@@ -45,6 +45,7 @@ begin
     else
       Res.Send('Erro ao cadastrar a emoção').Status(400);
   finally
+    FreeAndNil(LConnection);
     CoUninitialize;
   end;
 end;
@@ -73,6 +74,7 @@ begin
 
   finally
     CoUninitialize;
+    FreeAndNil(LConnection);
   end;
 end;
 
@@ -98,6 +100,7 @@ begin
 
   finally
     CoUninitialize;
+    FreeAndNil(LConnection);
   end;
 end;
 
@@ -120,6 +123,7 @@ begin
     LConnection.GetConnection).ToJSONArrayString()).Status(200);
   finally
     CoUninitialize;
+    FreeAndNil(LConnection);
   end;
 end;
 

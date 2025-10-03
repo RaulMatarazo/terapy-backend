@@ -15,7 +15,10 @@ uses
   Data.DB,
   Windows,
   ActiveX,
-  Provider.Authorization, System.JSON, Model.Paciente, System.SysUtils;
+  Provider.Authorization, System.JSON,
+  Model.Paciente,
+  System.SysUtils,
+  CheckValidations;
 
 procedure Get(Req: THorseRequest; Res: THorseResponse);
 var
@@ -81,10 +84,10 @@ begin
 
     finally
       LQuery.Free;
-      LConnection.Free;
     end;
   finally
     CoUninitialize; // Libera COM da thread
+    FreeAndNil(LConnection);
   end;
 end;
 
@@ -100,13 +103,13 @@ begin
     LConnection := TConnectionProvider.Create;
     LPaciente := TPaciente.Create;
 
-    if (LPaciente.ValidarEmail(LBody.GetValue('email').Value, LConnection.GetConnection)) then
+    if (ValidarEmail(LBody.GetValue('email').Value, LConnection.GetConnection)) then
     begin
       Res.Send('[ERRO] Email já cadastrado').Status(207);
       Exit;
     end;
 
-    if (LPaciente.ValidarTelefone(LBody.GetValue('telefone').Value, LConnection.GetConnection)) then
+    if (ValidarTelefone(LBody.GetValue('telefone').Value, LConnection.GetConnection)) then
     begin
       Res.Send('[ERRO] Telefone já cadastrado').Status(207);
       Exit;
@@ -122,6 +125,7 @@ begin
       Res.Send('Erro ao cadastrar o paciente').Status(203);
   finally
     CoUninitialize;
+    FreeAndNil(LConnection);
   end;
 end;
 
@@ -169,7 +173,7 @@ begin
 
       if LBody.GetValue('email') <> nil then
       begin
-         if LPaciente.ValidarEmailID(LBody.GetValue('email').Value,
+         if ValidarEmailID(LBody.GetValue('email').Value,
          StrToInt(Req.Query.Items['idUsuario']), LConnection.GetConnection) then
          begin
            Res.Send('Email já cadastrado').Status(207);
@@ -183,7 +187,7 @@ begin
 
       if LBody.GetValue('telefone') <> nil then
       begin
-        if LPaciente.ValidarTelefoneID(LBody.GetValue('telefone').Value,
+        if ValidarTelefoneID(LBody.GetValue('telefone').Value,
         StrToInt(Req.Query.Items['idUsuario']), LConnection.GetConnection) then
         begin
           Res.Send('Telefone já cadastrado').Status(207);
@@ -212,6 +216,7 @@ begin
 
   finally
       CoUninitialize;
+      FreeAndNil(LConnection);
   end;
 end;
 
@@ -233,6 +238,7 @@ begin
       Res.Send('Erro ao excluir o paciente').Status(400);
   finally
     CoUninitialize;
+    FreeAndNil(LConnection);
   end;
 end;
 
@@ -240,7 +246,7 @@ procedure Registry;
 begin
   THorse.AddCallback(Authorization()).Get('/api/pacientes', Get);
   THorse.AddCallback(Authorization()).Post('/api/pacientes', Post);
-    THorse.AddCallback(Authorization()).Put('/api/pacientes', Put);
+  THorse.AddCallback(Authorization()).Put('/api/pacientes', Put);
   THorse.AddCallback(Authorization()).Delete('/api/pacientes', Delete);
 end;
 

@@ -3,9 +3,13 @@ unit Model.Dashboard;
 interface
 
 uses
-  Data.Win.ADODB;
+  Data.Win.ADODB,
+  Dataset.Serialize,
+  System.JSON;
 
-type TDashboard = class
+type
+  TResultArray = array of integer;
+  TDashboard = class
   private
   public
   function TotalAnotacoes(AIdPsicologo: Integer;
@@ -14,12 +18,14 @@ type TDashboard = class
   AConnection: TADOConnection): Integer;
   function TotalAnotacoesGrafico(AIdPsicologo: Integer;
   AConnection: TADOConnection): TADOQuery;
+  function GraficoEmocoes(AidPaciente: Integer; AInicio, AFim: string;
+  AConnection: TADOConnection): TJSONArray;
 end;
 
 implementation
 
 uses
-  System.SysUtils;
+  System.SysUtils, Vcl.Dialogs;
 
 { TDashboard }
 
@@ -102,6 +108,31 @@ begin
     'ORDER BY u.data DESC ', [AIdPsicologo]);
     Open;
   end;
+end;
+
+function TDashboard.GraficoEmocoes(AidPaciente: Integer; AInicio, AFim: string;
+  AConnection: TADOConnection): TJSONArray;
+var
+  LQuery: TADOQuery;
+begin
+  LQuery := TADOQuery.Create(nil);
+  LQuery.Connection := AConnection;
+
+  with LQuery do
+  begin
+    Close;
+    SQL.Text := 'SELECT ' +
+	  'E.NOME, ' +
+	  'COUNT(PE.ID_EMOCAO) ' +
+    'FROM PACIENTE_EMOCAO PE ' +
+    'LEFT JOIN EMOCOES E ON E.ID_EMOCAO = PE.ID_EMOCAO ' +
+    'WHERE ' +
+	  'PE.ID_PACIENTE = ' + IntToStr(AidPaciente) +
+    ' GROUP BY PE.ID_EMOCAO, E.NOME ';
+    Open;
+  end;
+
+  Result := LQuery.ToJSONArray();
 end;
 
 end.

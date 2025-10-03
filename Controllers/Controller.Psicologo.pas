@@ -13,7 +13,8 @@ uses
   Data.Win.ADODB,
   Dataset.Serialize,
   ActiveX, JOSE.Types.JSON,
-  Model.Psicologo, System.SysUtils;
+  Model.Psicologo, System.SysUtils,
+  CheckValidations;
 
 procedure Get(Req: THorseRequest; Res: THorseResponse);
 var
@@ -50,10 +51,10 @@ begin
       Res.Send(LQuery.ToJSONArrayString()).Status(200);
     finally
       LQuery.Free;
-      LConnection.Free;
     end;
   finally
     CoUninitialize;
+    FreeAndNil(LConnection);
   end;
 end;
 
@@ -68,6 +69,19 @@ begin
     LBody := TJSONObject.ParseJSONValue(Req.Body) AS TJSONObject;
     LConnection := TConnectionProvider.Create;
     LPsicologo := TPsicologo.Create;
+
+    if (ValidarEmail(LBody.GetValue('email').Value, LConnection.GetConnection)) then
+    begin
+      Res.Send('Email já cadastrado').Status(207);
+      Exit;
+    end;
+
+    if (ValidarTelefone(LBody.GetValue('telefone').Value, LConnection.GetConnection)) then
+    begin
+      Res.Send('Telefone já cadastrado').Status(207);
+      Exit;
+    end;
+
     if (LPsicologo.CriarPsicologo(LBody.GetValue('primeiroNome').Value,
     LBody.GetValue('sobrenome').Value, LBody.GetValue('dataNascimento').Value,
     LBody.GetValue('email').Value, LBody.GetValue('telefone').Value,
@@ -78,6 +92,7 @@ begin
       Res.Send('Erro ao cadastrar o psicólogo').Status(203);
   finally
     CoUninitialize;
+    FreeAndNil(LConnection);
   end;
 end;
 
@@ -99,6 +114,7 @@ begin
       Res.Send('Erro ao excluir o psicólogo').Status(400);
   finally
     CoUninitialize;
+    FreeAndNil(LConnection);
   end;
 end;
 

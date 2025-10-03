@@ -23,7 +23,8 @@ uses
   Controller.Emocao in 'Controllers\Controller.Emocao.pas',
   Model.Emocao in 'Models\Model.Emocao.pas',
   Controller.Dashboard in 'Controllers\Controller.Dashboard.pas',
-  Model.Dashboard in 'Models\Model.Dashboard.pas';
+  Model.Dashboard in 'Models\Model.Dashboard.pas',
+  GetArrayToTJSONArray in 'Lib\GetArrayToTJSONArray.pas';
 
 begin
 

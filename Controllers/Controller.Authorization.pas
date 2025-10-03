@@ -51,11 +51,11 @@ begin
         Res.Send('Usuário Inválido').Status(203);
       end;
     finally
-      LConnection.Free;
       LUsuario.Free;
     end;
   finally
     CoUninitialize;
+    FreeAndNil(LConnection);
   end;
 
 

@@ -45,6 +45,7 @@ begin
       Res.Send('Erro ao cadastrar a anotação').Status(400);
   finally
     CoUninitialize;
+    FreeAndNil(LConnection);
   end;
 end;
 
@@ -69,6 +70,7 @@ begin
     LConnection.GetConnection).ToJSONArrayString()).Status(200);
   finally
     CoUninitialize;
+    FreeAndNil(LConnection);
   end;
 end;
 
@@ -95,6 +97,7 @@ begin
 
   finally
     CoUninitialize;
+    FreeAndNil(LConnection);
   end;
 end;
 
@@ -120,6 +123,7 @@ begin
 
   finally
     CoUninitialize;
+    FreeAndNil(LConnection);
   end;
 end;
 

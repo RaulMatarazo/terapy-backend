@@ -12,7 +12,8 @@ uses
   Provider.Connection,
   Data.Win.ADODB,
   Dataset.Serialize,
-  ActiveX;
+  ActiveX,
+  System.SysUtils;
 
 procedure Get(Req: THorseRequest; Res: THorseResponse);
 var
@@ -35,10 +36,10 @@ begin
       Res.Send(LQuery.ToJSONArrayString()).Status(200);
     finally
       LQuery.Free;
-      LConnection.Free;
     end;
   finally
     CoUninitialize;
+    FreeAndNil(LConnection);
   end;
 end;
 
