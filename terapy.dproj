@@ -111,6 +111,7 @@
         <DCCReference Include="Controllers\Controller.Dashboard.pas"/>
         <DCCReference Include="Models\Model.Dashboard.pas"/>
         <DCCReference Include="Lib\GetArrayToTJSONArray.pas"/>
+        <DCCReference Include="Lib\CheckValidations.pas"/>
         <BuildConfiguration Include="Base">
             <Key>Base</Key>
         </BuildConfiguration>

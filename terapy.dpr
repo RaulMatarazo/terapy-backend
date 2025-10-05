@@ -24,7 +24,8 @@ uses
   Model.Emocao in 'Models\Model.Emocao.pas',
   Controller.Dashboard in 'Controllers\Controller.Dashboard.pas',
   Model.Dashboard in 'Models\Model.Dashboard.pas',
-  GetArrayToTJSONArray in 'Lib\GetArrayToTJSONArray.pas';
+  GetArrayToTJSONArray in 'Lib\GetArrayToTJSONArray.pas',
+  CheckValidations in 'Lib\CheckValidations.pas';
 
 begin
 
