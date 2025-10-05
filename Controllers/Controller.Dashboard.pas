@@ -30,6 +30,7 @@ var
   LGraficoEmocoes: TJSONArray;
   LGraficoEmocoesJSON: TJSONArray;
   LJSON: TJSONObject;
+  LGraficoEmocoesDetalhe: TADOQuery;
 begin
   CoInitialize(nil);
   try
@@ -70,10 +71,14 @@ begin
     LGraficoEmocoes := LDashboard.GraficoEmocoes(StrToInt(Req.Query.Items['idpaciente']),
     Req.Query.Items['inicio'], Req.Query.Items['fim'], LConnection.GetConnection);
 
+    LGraficoEmocoesDetalhe := LDashboard.GraficoEmocoesDetalhe(StrToInt(Req.Query.Items['idpaciente']),
+    Req.Query.Items['inicio'], Req.Query.Items['fim'], LConnection.GetConnection);
+
    // LGraficoEmocoesJSON := ArrayToJsonArray(LGraficoEmocoes);
 
     LJSON := TJSONObject.Create.AddPair('anotacoes', LTotalAnotacoes)
-   .AddPair('pacientes', LTotalPacientes).AddPair('totalEmocoes', LGraficoEmocoes);
+   .AddPair('pacientes', LTotalPacientes).AddPair('totalEmocoes', LGraficoEmocoes)
+   .AddPair('emocoesDetalhe', LGraficoEmocoesDetalhe.ToJSONArray());
     try
       Res.ContentType('application/json')
          .Send(LJSON.ToJSON)

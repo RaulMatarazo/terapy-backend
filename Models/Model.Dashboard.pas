@@ -20,6 +20,8 @@ type
   AConnection: TADOConnection): TADOQuery;
   function GraficoEmocoes(AidPaciente: Integer; AInicio, AFim: string;
   AConnection: TADOConnection): TJSONArray;
+  function GraficoEmocoesDetalhe(AidPaciente: Integer; AInicio, AFim: string;
+  AConnection: TADOConnection): TADOQuery;
 end;
 
 implementation
@@ -128,11 +130,33 @@ begin
     'LEFT JOIN EMOCOES E ON E.ID_EMOCAO = PE.ID_EMOCAO ' +
     'WHERE ' +
 	  'PE.ID_PACIENTE = ' + IntToStr(AidPaciente) +
+    ' AND PE.hora::date BETWEEN ' + QuotedStr(AInicio) + ' AND ' + QuotedStr(AFim) +
     ' GROUP BY PE.ID_EMOCAO, E.NOME ';
     Open;
   end;
 
   Result := LQuery.ToJSONArray();
 end;
+
+function TDashboard.GraficoEmocoesDetalhe(AidPaciente: Integer; AInicio, AFim: string;
+  AConnection: TADOConnection): TADOQuery;
+var
+  LQuery: TADOQuery;
+begin
+  LQuery := TADOQuery.Create(nil);
+  LQuery.Connection := AConnection;
+
+  with LQuery do
+  begin
+    Close;
+    SQL.Text := 'SELECT id_emocao, qualidade, id_intensidade, descricao, atividade, hora::date as data, hora::time as hora from PACIENTE_EMOCAO ' +
+    'WHERE id_paciente = ' + IntToStr(AidPaciente) +
+    ' AND hora::date BETWEEN ' + QuotedStr(AInicio) + ' AND ' + QuotedStr(AFim);
+    Open;
+  end;
+
+  Result := LQuery;
+end;
+
 
 end.
