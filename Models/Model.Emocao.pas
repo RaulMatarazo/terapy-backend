@@ -82,7 +82,8 @@ begin
   LQuery := TADOQuery.Create(nil);
   LQuery.Connection := AConnection;
 
-  LSQL := Format('SELECT e.nome, p.id_paciente, p.hora FROM paciente_emocao p LEFT JOIN emocoes e ' +
+  LSQL := Format('SELECT e.nome, p.qualidade, p.id_intensidade, ' +
+  ' p.descricao, p.atividade, p.id_paciente, p.hora FROM paciente_emocao p LEFT JOIN emocoes e ' +
   ' ON e.id_emocao = p.id_emocao where id_paciente = %d ORDER BY p.hora DESC ', [AIdPaciente]);
 
   with LQuery do
