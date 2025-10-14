@@ -9,7 +9,7 @@ type TNota = class
   private
   public
   function CriarAnotacao(AIdPsicologo, AIdPaciente: Integer; AAnotacao,
-  ADataCriacao: string; AConnection: TADOConnection): Boolean;
+  ADataCriacao: string; var AIDNota: Integer; AConnection: TADOConnection): Boolean;
   function VisualizarAnotacoes(AData, APalavra,
   AOrdem: string; AIdPsicologo: Integer; AConnection: TADOConnection): TADOQuery;
   function AtualizarAnotacao(AIdAnotacao: Integer;
@@ -56,15 +56,27 @@ begin
 end;
 
 function TNota.CriarAnotacao(AIdPsicologo, AIdPaciente: Integer; AAnotacao,
-  ADataCriacao: string; AConnection: TADOConnection): Boolean;
+  ADataCriacao: string; var AIDNota: Integer; AConnection: TADOConnection): Boolean;
 var
   LSQL: string;
+  LQuery: TADOQuery;
 begin
   try
+    LQuery := TADOQuery.Create(nil);
+    LQuery.Connection := AConnection;
     LSQL := Format('INSERT INTO psicologo_notas (id_psicologo, id_paciente, anotacao ' +
-    ' ,data_criacao) VALUES (%d, %d, %s, %s)', [AIdPsicologo, AIdPaciente, Quotedstr(AAnotacao),
+    ' ,data_criacao) VALUES (%d, %d, %s, %s) RETURNING id_nota', [AIdPsicologo, AIdPaciente, Quotedstr(AAnotacao),
     QuotedStr(ADataCriacao)]);
-    AConnection.Execute(LSQL);
+
+    with LQuery do
+    begin
+      Close;
+      SQL.Text := LSQL;
+      Open;
+    end;
+
+    AIDNota := LQuery.FieldByName('id_nota').Value;
+
     Result := True;
   except
     Result := False;

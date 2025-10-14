@@ -27,6 +27,7 @@ var
   LBody: TJSONObject;
   LNota: TNota;
   LData: string;
+  LIDNota: Integer;
 begin
   CoInitialize(nil);
   try
@@ -39,8 +40,8 @@ begin
 
     if (LNota.CriarAnotacao(StrToInt(LBody.GetValue('idpsicologo').Value),
     StrToInt(LBody.GetValue('idpaciente').Value),
-    LBody.GetValue('anotacao').Value, LData, LConnection.GetConnection)) then
-      Res.Send('Anotação cadastrada com sucesso!').Status(201)
+    LBody.GetValue('anotacao').Value, LData, LIDNota, LConnection.GetConnection)) then
+      Res.Send(TJSONObject.Create.AddPair('id', LIDNota.ToString).ToJSON()).Status(200)
     else
       Res.Send('Erro ao cadastrar a anotação').Status(400);
   finally
