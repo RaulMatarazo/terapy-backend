@@ -11,7 +11,7 @@ type TNota = class
   function CriarAnotacao(AIdPsicologo, AIdPaciente: Integer; AAnotacao,
   ADataCriacao: string; var AIDNota: Integer; AConnection: TADOConnection): Boolean;
   function VisualizarAnotacoes(AData, APalavra,
-  AOrdem: string; AIdPsicologo: Integer; AConnection: TADOConnection): TADOQuery;
+  AOrdem: string; AIdPsicologo: Integer; AIdPaciente: string; AConnection: TADOConnection): TADOQuery;
   function AtualizarAnotacao(AIdAnotacao: Integer;
   AAnotacao: string; AConnection: TADOConnection): Boolean;
   function ExcluirAnotacao(AIdAnotacao: Integer;
@@ -84,7 +84,7 @@ begin
 end;
 
 function TNota.VisualizarAnotacoes(AData, APalavra,
-  AOrdem: string; AIdPsicologo: Integer; AConnection: TADOConnection): TADOQuery;
+  AOrdem: string; AIdPsicologo: Integer; AIdPaciente: string; AConnection: TADOConnection): TADOQuery;
 var
   LQuery: TADOQuery;
   LSQL: string;
@@ -103,6 +103,11 @@ begin
   if (APalavra <> '') then
   begin
     LSQL := LSQL + Format(' AND anotacao like %s ', [QuotedStr('%' + APalavra + '%')]);
+  end;
+
+  if (AIdPaciente <> '') then
+  begin
+    LSQL := LSQL + Format(' AND id_paciente = %d ', [AIdPaciente.ToInteger()]);
   end;
 
   if (AOrdem <> '') then

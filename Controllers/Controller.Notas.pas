@@ -41,7 +41,7 @@ begin
     if (LNota.CriarAnotacao(StrToInt(LBody.GetValue('idpsicologo').Value),
     StrToInt(LBody.GetValue('idpaciente').Value),
     LBody.GetValue('anotacao').Value, LData, LIDNota, LConnection.GetConnection)) then
-      Res.Send(TJSONObject.Create.AddPair('id', LIDNota.ToString).ToJSON()).Status(200)
+      Res.Send(TJSONObject.Create.AddPair('idNota', LIDNota.ToString).ToJSON()).Status(200)
     else
       Res.Send('Erro ao cadastrar a anotação').Status(400);
   finally
@@ -67,7 +67,7 @@ begin
 
     Res.Send(LNota.VisualizarAnotacoes(Req.Query.Items['data'],
     Req.Query.Items['palavra'], Req.Query.Items['ordem'],
-    StrToInt(Req.Query.Items['idpsicologo']),
+    StrToInt(Req.Query.Items['idpsicologo']), Req.Query.Items['idpaciente'],
     LConnection.GetConnection).ToJSONArrayString()).Status(200);
   finally
     CoUninitialize;
