@@ -15,7 +15,7 @@ type
       FTelefone: string;
       FSenha: string;
     public
-      function ValidarUsuario(AConnection: TConnectionProvider; AUsername, APassword: string; var ARole, AIDPsicologo, AIDPaciente: string): Boolean;
+      function ValidarUsuario(AConnection: TConnectionProvider; AUsername, APassword: string; var ARole, AIDPsicologo, AIDPaciente, AIDUsuario: string): Boolean;
   end;
 
 implementation
@@ -25,7 +25,7 @@ uses
   Data.SqlExpr,
   System.SysUtils;
 
-function TUsuario.ValidarUsuario(AConnection: TConnectionProvider; AUsername, APassword: string; var ARole, AIDPsicologo, AIDPaciente: string): Boolean;
+function TUsuario.ValidarUsuario(AConnection: TConnectionProvider; AUsername, APassword: string; var ARole, AIDPsicologo, AIDPaciente, AIDUsuario: string): Boolean;
 var
   LQuery: TADOQuery;
   LQueryPsicologo: TADOQuery;
@@ -39,6 +39,8 @@ begin
         SQL.Text := 'SELECT * FROM usuarios WHERE email = ' + QuotedStr(AUsername) + ' AND senha = ' + QuotedStr(APassword);
         Open;
       end;
+
+      AIDUsuario := LQuery.FieldByName('id_usuario').AsString;
 
       if (LQuery.ExecSQL = 1) then
       begin

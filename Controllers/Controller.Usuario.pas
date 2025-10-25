@@ -19,17 +19,26 @@ procedure Get(Req: THorseRequest; Res: THorseResponse);
 var
   LQuery: TADOQuery;
   LConnection: TConnectionProvider;
+  SSQL: string;
 begin
   COInitialize(nil);
   try
     try
       LQuery := TADOQuery.Create(nil);
       LConnection := TConnectionProvider.Create;
+
+      if Req.Query.ContainsKey('idusuario') then
+        SSQL := 'SELECT id_usuario, papel, primeiro_nome, sobrenome, ' +
+        ' data_nascimento, email, telefone, senha FROM usuarios WHERE id_usuario = ' +
+        Req.Query.Items['idusuario']
+      else
+        SSQL := 'SELECT id_usuario, papel, primeiro_nome, sobrenome, ' +
+        ' data_nascimento, email, telefone, senha FROM usuarios';
+
       with LQuery do
       begin
         Connection := LConnection.GetConnection;
-        SQL.Text := 'SELECT id_usuario, papel, primeiro_nome, sobrenome, ' +
-        ' data_nascimento, email, telefone FROM usuarios';
+        SQL.Text := SSQL;
         Open;
       end;
 

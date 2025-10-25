@@ -25,7 +25,7 @@ var
   LBody: TJSONObject;
   LConnection: TConnectionProvider;
   LUsuario: TUsuario;
-  LRole, LIDPsicologo, LIDPaciente: string;
+  LRole, LIDPsicologo, LIDPaciente, LIDUsuario: string;
 begin
 
   try
@@ -35,14 +35,17 @@ begin
       LUsuario := TUsuario.Create;
       LBody := TJSONObject.ParseJSONValue(Req.Body) AS TJSONObject;
 
-      if LUsuario.ValidarUsuario(LConnection, LBody.GetValue('username').Value, LBody.GetValue('password').Value, LRole, LIDPsicologo, LIDPaciente) then
+      if LUsuario.ValidarUsuario(LConnection, LBody.GetValue('username').Value,
+      LBody.GetValue('password').Value, LRole, LIDPsicologo, LIDPaciente, LIDUsuario) then
       begin
         LToken := getToken(LBody.GetValue('username').Value);
         //WriteLn(LToken);
         if LRole = 'psicologo' then
-          Res.Send(TJSONObject.Create.AddPair('token', LToken).AddPair('papel', LRole).AddPair('idpsicologo', LIDPsicologo).ToJSON).Status(200)
+          Res.Send(TJSONObject.Create.AddPair('token', LToken).AddPair('papel', LRole).AddPair('idpsicologo', LIDPsicologo)
+          .AddPair('idusuario', LIDUsuario).ToJSON).Status(200)
         else if LRole = 'paciente' then
-          Res.Send(TJSONObject.Create.AddPair('token', LToken).AddPair('papel', LRole).AddPair('idpaciente', LIDPaciente).ToJSON).Status(200)
+          Res.Send(TJSONObject.Create.AddPair('token', LToken).AddPair('papel', LRole).AddPair('idpaciente', LIDPaciente)
+          .AddPair('idusuario', LIDUsuario).ToJSON).Status(200)
         else if LRole = 'admin' then
           Res.Send('Entre como paciente ou psicólogo, função de admin indisponível no momento').Status(240);
       end
